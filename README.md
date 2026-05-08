@@ -56,6 +56,10 @@ activity_data_service/
 └── .env                    # Local credentials (gitignored)
 ```
 
+## Demo
+
+An exemplary deployed version can be accessed here: [activity-data-service.onrender.com](https://activity-data-service.onrender.com/)
+
 ## Deployment
 
 The app is configured for [Render](https://render.com) via `render.yaml`. Gunicorn serves the Dash app in production:
