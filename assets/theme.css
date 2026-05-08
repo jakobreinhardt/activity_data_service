@@ -1,0 +1,142 @@
+/* === Light Theme (Default) === */
+:root {
+    --dash-bg: #ffffff;
+    --dash-bg-alt: #f8f9fa;
+    --dash-surface: #f1f3f5;
+    --dash-text: #333333;
+    --dash-text-muted: #6c757d;
+    --dash-text-heading: #1a1a2e;
+    --dash-border: #e0e0e0;
+    --dash-primary: #1a1a2e;
+    --dash-accent: #2d2d44;
+}
+
+/* === Dark Theme === */
+body.dark-theme {
+    --dash-bg: #0f172a;
+    --dash-bg-alt: #1e293b;
+    --dash-surface: #334155;
+    --dash-text: #e2e8f0;
+    --dash-text-muted: #94a3b8;
+    --dash-text-heading: #f1f5f9;
+    --dash-border: #475569;
+    --dash-primary: #38bdf8;
+    --dash-accent: #22d3ee;
+}
+
+/* === Layout === */
+.dashboard-container {
+    background-color: var(--dash-bg);
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding-bottom: 40px;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* === Title === */
+.dashboard-title {
+    color: var(--dash-text-heading);
+    text-align: center;
+    margin: 0;
+    padding: 28px 0 6px 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.dashboard-date {
+    color: var(--dash-text-muted);
+    text-align: center;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+}
+
+/* === Stat Cards === */
+.stat-card {
+    background-color: var(--dash-bg-alt);
+    border: 1px solid var(--dash-border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    flex: 1;
+    text-align: center;
+    min-width: 130px;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.stat-card:hover {
+    border-color: var(--dash-primary);
+    transform: translateY(-2px);
+}
+
+.stat-label {
+    color: var(--dash-text-muted);
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* === Section Headers === */
+.section-header {
+    margin: 32px 30px 12px 30px;
+}
+
+.section-header h2 {
+    color: var(--dash-text-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    padding-bottom: 8px;
+}
+
+.section-accent-bar {
+    width: 60px;
+    height: 3px;
+    background: #1a1a2e;
+    border-radius: 2px;
+}
+
+body.dark-theme .section-accent-bar {
+    background: linear-gradient(90deg, #38bdf8, #22d3ee);
+}
+
+/* === Theme Toggle === */
+#theme-toggle {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 9999;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--dash-border);
+    background: var(--dash-bg-alt);
+    color: var(--dash-text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 0;
+    line-height: 1;
+}
+
+#theme-toggle:hover {
+    transform: scale(1.1);
+    border-color: var(--dash-primary);
+    color: var(--dash-primary);
+}
+
+body.dark-theme #theme-toggle {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+#theme-toggle .icon-dark { display: none; }
+#theme-toggle .icon-light { display: block; }
+
+body.dark-theme #theme-toggle .icon-light { display: none; }
+body.dark-theme #theme-toggle .icon-dark { display: block; }

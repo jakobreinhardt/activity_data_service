@@ -153,7 +153,7 @@ def build_map(gpx_df):
         lat=gpx_df["lat"],
         lon=gpx_df["lon"],
         mode="lines",
-        line=dict(width=3, color="#e74c3c"),
+        line=dict(width=3, color="#f87171"),
         name="Route",
         hoverinfo="skip",
     ))
@@ -162,14 +162,14 @@ def build_map(gpx_df):
         lat=[gpx_df.iloc[0]["lat"]],
         lon=[gpx_df.iloc[0]["lon"]],
         mode="markers",
-        marker=dict(size=12, color="#2ecc71", symbol="circle"),
+        marker=dict(size=12, color="#34d399", symbol="circle"),
         name="Start",
     ))
     fig.add_trace(go.Scattermap(
         lat=[gpx_df.iloc[-1]["lat"]],
         lon=[gpx_df.iloc[-1]["lon"]],
         mode="markers",
-        marker=dict(size=12, color="#e74c3c", symbol="circle"),
+        marker=dict(size=12, color="#f87171", symbol="circle"),
         name="Finish",
     ))
 
@@ -178,7 +178,7 @@ def build_map(gpx_df):
         lat=[None],
         lon=[None],
         mode="markers",
-        marker=dict(size=16, color="#ffff00", symbol="circle"),
+        marker=dict(size=16, color="#fbbf24", symbol="circle"),
         name="Position",
         showlegend=False,
     ))
@@ -195,10 +195,13 @@ def build_map(gpx_df):
         margin=dict(l=0, r=0, t=0, b=0),
         showlegend=True,
         legend=dict(
-            bgcolor="rgba(17,17,34,0.8)",
-            font=dict(color="white"),
+            bgcolor="rgba(248,249,250,0.9)",
+            font=dict(color="#333333", family="Inter"),
             x=0.01, y=0.99,
+            bordercolor="#e0e0e0",
+            borderwidth=1,
         ),
+        paper_bgcolor="#ffffff",
         uirevision="constant",
     )
     return fig
@@ -216,8 +219,8 @@ def build_elevation_profile(gpx_df):
     fig.add_trace(go.Scatter(
         x=gpx_df["elapsed_km"], y=gpx_df["ele"],
         mode="lines", name="Elevation",
-        line=dict(color="#2ecc71", width=1.2),
-        fill="tozeroy", fillcolor="rgba(46,204,113,0.15)",
+        line=dict(color="#34d399", width=1.2),
+        fill="tozeroy", fillcolor="rgba(52,211,153,0.12)",
     ), row=1, col=1)
     fig.update_yaxes(title_text="m", row=1, col=1)
 
@@ -225,7 +228,7 @@ def build_elevation_profile(gpx_df):
         fig.add_trace(go.Scatter(
             x=gpx_df["elapsed_km"], y=gpx_df["hr"],
             mode="lines", name="HR",
-            line=dict(color="#e74c3c", width=1),
+            line=dict(color="#f87171", width=1),
         ), row=2, col=1)
         fig.update_yaxes(title_text="bpm", row=2, col=1)
 
@@ -233,18 +236,25 @@ def build_elevation_profile(gpx_df):
         fig.add_trace(go.Scatter(
             x=gpx_df["elapsed_km"], y=gpx_df["cad"],
             mode="lines", name="Cadence",
-            line=dict(color="#f39c12", width=1),
+            line=dict(color="#fbbf24", width=1),
         ), row=3, col=1)
         fig.update_yaxes(title_text="spm", row=3, col=1)
 
     fig.update_xaxes(title_text="Distance (km)", row=3, col=1)
     fig.update_layout(
         height=500,
-        template="plotly_dark",
+        template="plotly_white",
+        paper_bgcolor="#ffffff",
+        plot_bgcolor="#f8f9fa",
+        font=dict(family="Inter", color="#6c757d"),
         showlegend=False,
         margin=dict(l=60, r=30, t=30, b=40),
         hovermode="x unified",
     )
+    fig.update_xaxes(gridcolor="#e0e0e0", zerolinecolor="#e0e0e0")
+    fig.update_yaxes(gridcolor="#e0e0e0", zerolinecolor="#e0e0e0")
+    for ann in fig.layout.annotations:
+        ann.font.color = "#1a1a2e"
     return fig
 
 
@@ -261,14 +271,14 @@ def build_wellness_figure(hr_df, stress_df, bb_df, resp_df, steps_df):
         fig.add_trace(go.Scatter(
             x=hr_df["time"], y=hr_df["hr"],
             mode="lines", name="Heart Rate",
-            line=dict(color="#e74c3c", width=1.2),
-            fill="tozeroy", fillcolor="rgba(231,76,60,0.15)",
+            line=dict(color="#f87171", width=1.2),
+            fill="tozeroy", fillcolor="rgba(248,113,113,0.12)",
         ), row=1, col=1)
         fig.update_yaxes(title_text="bpm", row=1, col=1)
 
     if not stress_df.empty:
         colors = [
-            "#2ecc71" if v <= 25 else "#f39c12" if v <= 50 else "#e67e22" if v <= 75 else "#e74c3c"
+            "#34d399" if v <= 25 else "#fbbf24" if v <= 50 else "#f59e0b" if v <= 75 else "#f87171"
             for v in stress_df["stress"]
         ]
         fig.add_trace(go.Bar(
@@ -281,9 +291,9 @@ def build_wellness_figure(hr_df, stress_df, bb_df, resp_df, steps_df):
         fig.add_trace(go.Scatter(
             x=bb_df["time"], y=bb_df["body_battery"],
             mode="lines+markers", name="Body Battery",
-            line=dict(color="#3498db", width=1.5),
+            line=dict(color="#38bdf8", width=1.5),
             marker=dict(size=3),
-            fill="tozeroy", fillcolor="rgba(52,152,219,0.12)",
+            fill="tozeroy", fillcolor="rgba(56,189,248,0.10)",
         ), row=3, col=1)
         fig.update_yaxes(title_text="Level", range=[0, 100], row=3, col=1)
 
@@ -291,17 +301,17 @@ def build_wellness_figure(hr_df, stress_df, bb_df, resp_df, steps_df):
         fig.add_trace(go.Scatter(
             x=resp_df["time"], y=resp_df["respiration"],
             mode="lines", name="Respiration",
-            line=dict(color="#9b59b6", width=1.2),
-            fill="tozeroy", fillcolor="rgba(155,89,182,0.12)",
+            line=dict(color="#a78bfa", width=1.2),
+            fill="tozeroy", fillcolor="rgba(167,139,250,0.10)",
         ), row=4, col=1)
         fig.update_yaxes(title_text="br/min", row=4, col=1)
 
     if not steps_df.empty:
         level_colors = {
-            "sedentary": "#555",
-            "active": "#2ecc71",
-            "highlyActive": "#e67e22",
-            "generic": "#3498db",
+            "sedentary": "#475569",
+            "active": "#34d399",
+            "highlyActive": "#f59e0b",
+            "generic": "#38bdf8",
         }
         colors = [level_colors.get(lv, "#888") for lv in steps_df["activity_level"]]
         fig.add_trace(go.Bar(
@@ -313,34 +323,37 @@ def build_wellness_figure(hr_df, stress_df, bb_df, resp_df, steps_df):
     fig.update_xaxes(title_text="Time (local)", row=5, col=1)
     fig.update_layout(
         height=1000,
-        template="plotly_dark",
+        template="plotly_white",
+        paper_bgcolor="#ffffff",
+        plot_bgcolor="#f8f9fa",
+        font=dict(family="Inter", color="#6c757d"),
         showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5),
+        legend=dict(
+            orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5,
+            font=dict(color="#333333"),
+        ),
         margin=dict(l=60, r=30, t=40, b=40),
         hovermode="x unified",
     )
+    fig.update_xaxes(gridcolor="#e0e0e0", zerolinecolor="#e0e0e0")
+    fig.update_yaxes(gridcolor="#e0e0e0", zerolinecolor="#e0e0e0")
+    for ann in fig.layout.annotations:
+        ann.font.color = "#1a1a2e"
     return fig
 
 
 def card(title, value, color):
     return html.Div([
-        html.Div(title, style={"color": "#aaa", "fontSize": "12px", "marginBottom": "2px"}),
-        html.Div(value, style={"color": color, "fontSize": "24px", "fontWeight": "bold"}),
-    ], style={
-        "backgroundColor": "#1e1e2f",
-        "borderRadius": "10px",
-        "padding": "14px 20px",
-        "flex": "1",
-        "textAlign": "center",
-        "minWidth": "130px",
-    })
+        html.Div(title, className="stat-label"),
+        html.Div(value, className="stat-value", style={"color": color}),
+    ], className="stat-card")
 
 
 def section_header(text):
-    return html.H2(text, style={
-        "color": "#ddd", "fontSize": "18px", "margin": "24px 30px 8px 30px",
-        "borderBottom": "1px solid #333", "paddingBottom": "6px",
-    })
+    return html.Div([
+        html.H2(text),
+        html.Div(className="section-accent-bar"),
+    ], className="section-header")
 
 
 def create_app():
@@ -357,13 +370,8 @@ def create_app():
     title = "Garmin Dashboard"
     if activity:
         title = activity.get("activityName", title)
-    children.append(html.H1(title, style={
-        "color": "#fff", "textAlign": "center", "margin": "0",
-        "padding": "20px 0 6px 0", "fontSize": "26px",
-    }))
-    children.append(html.Div(DATE, style={
-        "color": "#888", "textAlign": "center", "fontSize": "14px", "marginBottom": "12px",
-    }))
+    children.append(html.H1(title, className="dashboard-title"))
+    children.append(html.Div(DATE, className="dashboard-date"))
 
     # --- Activity summary cards ---
     if activity:
@@ -380,13 +388,13 @@ def create_app():
         pace_min, pace_sec = divmod(int(avg_pace_s), 60)
 
         cards = [
-            card("Distance", f"{dist_km:.1f} km", "#3498db"),
-            card("Duration", dur_str, "#2ecc71"),
-            card("Elevation", f"{elev:.0f} m", "#2ecc71"),
-            card("Avg Pace", f"{pace_min}:{pace_sec:02d} /km", "#f39c12"),
-            card("Avg HR", f"{avg_hr:.0f} bpm", "#e74c3c"),
-            card("Max HR", f"{max_hr:.0f} bpm", "#e74c3c"),
-            card("Calories", f"{cals:.0f}", "#e67e22"),
+            card("Distance", f"{dist_km:.1f} km", "#38bdf8"),
+            card("Duration", dur_str, "#34d399"),
+            card("Elevation", f"{elev:.0f} m", "#34d399"),
+            card("Avg Pace", f"{pace_min}:{pace_sec:02d} /km", "#22d3ee"),
+            card("Avg HR", f"{avg_hr:.0f} bpm", "#f87171"),
+            card("Max HR", f"{max_hr:.0f} bpm", "#f87171"),
+            card("Calories", f"{cals:.0f}", "#fbbf24"),
         ]
         children.append(html.Div(cards, style={
             "display": "flex", "gap": "10px", "padding": "0 30px",
@@ -419,18 +427,20 @@ def create_app():
     wellness_fig = build_wellness_figure(hr_df, stress_df, bb_df, resp_df, steps_df)
     children.append(html.Div([
         dcc.Graph(
+            id="wellness-chart",
             figure=wellness_fig,
             config={"displayModeBar": True, "scrollZoom": True},
         ),
     ], style={"padding": "0 20px"}))
 
-    app = Dash(__name__, suppress_callback_exceptions=True)
-    app.layout = html.Div(children, style={
-        "backgroundColor": "#111122",
-        "minHeight": "100vh",
-        "fontFamily": "system-ui",
-        "paddingBottom": "40px",
-    })
+    app = Dash(
+        __name__,
+        suppress_callback_exceptions=True,
+        external_stylesheets=[
+            "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
+        ],
+    )
+    app.layout = html.Div(children, className="dashboard-container")
 
     if not gpx_df.empty:
         km_arr = gpx_df["elapsed_km"].values
