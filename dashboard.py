@@ -442,14 +442,16 @@ def create_app():
         @app.callback(
             Output("gps-map", "figure"),
             Input("elevation-profile", "hoverData"),
+            Input("elevation-profile", "clickData"),
             prevent_initial_call=True,
         )
-        def update_map_marker(hover_data):
+        def update_map_marker(hover_data, click_data):
+            data = hover_data or click_data
             fig = build_map(gpx_df)
-            if not hover_data or "points" not in hover_data:
+            if not data or "points" not in data:
                 return fig
 
-            x_val = hover_data["points"][0].get("x")
+            x_val = data["points"][0].get("x")
             if x_val is None:
                 return fig
 
