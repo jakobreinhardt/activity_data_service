@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: activity-dashboard
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn dashboard:server
+    envVars:
+      - key: GARMIN_EMAIL
+        sync: false
+      - key: GARMIN_PASSWORD
+        sync: false
+      - key: APP_ENV
+        value: production
+      - key: TZ_OFFSET
+        value: "2"
+      - key: DASHBOARD_DATE
+        sync: false

@@ -1,4 +1,5 @@
 import json
+import os
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -8,10 +9,14 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from dash import Dash, html, dcc, Input, Output, callback
+from dotenv import load_dotenv
 
-DATA_DIR = Path(__file__).parent / "garmin_data"
-DATE = "2026-05-04"
-TZ = timezone(timedelta(hours=2))
+load_dotenv()
+
+DATA_DIR = Path(os.environ.get("DATA_DIR", Path(__file__).parent / "garmin_data"))
+DATE = os.environ.get("DASHBOARD_DATE", "2026-05-04")
+TZ_OFFSET = int(os.environ.get("TZ_OFFSET", "2"))
+TZ = timezone(timedelta(hours=TZ_OFFSET))
 
 GPX_NS = {
     "gpx": "http://www.topografix.com/GPX/1/1",
@@ -419,7 +424,7 @@ def create_app():
         ),
     ], style={"padding": "0 20px"}))
 
-    app = Dash(__name__)
+    app = Dash(__name__, suppress_callback_exceptions=True)
     app.layout = html.Div(children, style={
         "backgroundColor": "#111122",
         "minHeight": "100vh",
@@ -466,7 +471,11 @@ def create_app():
     return app
 
 
+app = create_app()
+server = app.server  # used by gunicorn in production
+
 if __name__ == "__main__":
-    app = create_app()
-    print("Starting dashboard at http://127.0.0.1:8050")
-    app.run(debug=False, port=8050)
+    port = int(os.environ.get("PORT", "8050"))
+    debug = os.environ.get("APP_ENV", "sandbox") == "sandbox"
+    print(f"Starting dashboard at http://127.0.0.1:{port}")
+    app.run(debug=debug, host="0.0.0.0", port=port)
